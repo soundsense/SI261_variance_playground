@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Variance Playground (Grade 5)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --ink:#0f172a; --blue:#0369a1; --muted:#f1f5f9; --bg:#f8fafc; --card:#fff; --line:#e5e7eb; --pill:#e0f2fe; --good:#065f46; --goodbg:#ecfdf5; }
+    body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 24px; }
+    h1 { color:var(--blue); margin:0 0 8px; }
+    h2 { margin: 8px 0; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius: 12px; padding: 16px; margin: 16px 0; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+    .pill { display:inline-block; background:var(--pill); padding:6px 10px; border-radius:999px; margin:3px; font-weight:600; }
+    table { width:100%; border-collapse: collapse; margin-top:12px; }
+    th, td { border:1px solid var(--line); padding:8px; text-align:center; }
+    th { background:var(--muted); }
+    input { width:90px; max-width:28vw; padding:4px; border:1px solid var(--line); border-radius:6px; text-align:center; }
+    .btn { background:var(--blue); color:#fff; border:0; border-radius:6px; padding:6px 12px; cursor:pointer; margin-top:8px; }
+    .result { margin-top:6px; padding:6px; background:var(--bg); border:1px solid var(--line); border-radius:6px; }
+    .success { background:var(--goodbg); border:1px solid #bbf7d0; color:var(--good); border-radius:8px; padding:10px; margin-top:12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .select { padding:6px 10px; border:1px solid var(--line); border-radius:6px; background:#fff; }
+    .note { font-size: 0.95rem; color:#334155; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Variance Playground</h1>
+    <p class="note">Variance tells us how “spread out” numbers are. Bigger variance → more spread.</p>
+
+    <!-- Formula refresher -->
+    <section class="card">
+      <h2>What does the variance formula mean?</h2>
+      <p class="mono">
+        Sample variance (s²) = Σ (xᵢ − x̄)² ÷ (n − 1)<br>
+        Population variance (σ²) = Σ (xᵢ − μ)² ÷ n
+      </p>
+      <ul>
+        <li><b>xᵢ</b>: each number • <b>x̄</b> or <b>μ</b>: mean (average) • <b>n</b>: how many numbers • <b>Σ</b>: add them all</li>
+        <li><b>In words:</b> subtract the mean from each number, square it, add them all, then divide by <b>n−1</b> (sample) or <b>n</b> (population).</li>
+      </ul>
+      <p class="note">Grade-friendly idea: Use <b>sample</b> when your list is a small sample of a bigger group. Use <b>population</b> if your list is the whole group.</p>
+    </section>
+
+    <!-- Example -->
+    <section class="card">
+      <h2>Example Walkthrough (Sample Variance)</h2>
+      <p>Numbers:
+        <span class="pill">3</span><span class="pill">5</span>
+        <span class="pill">8</span><span class="pill">2</span>
+        <span class="pill">7</span>
+      </p>
+      <p><b>Mean (x̄) = 5</b></p>
+      <table>
+        <thead>
+          <tr>
+            <th>xᵢ</th>
+            <th>mean</th>
+            <th>xᵢ − mean</th>
+            <th>(xᵢ − mean)²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>3</td><td>5</td><td>-2</td><td>4</td></tr>
+          <tr><td>5</td><td>5</td><td>0</td><td>0</td></tr>
+          <tr><td>8</td><td>5</td><td>3</td><td>9</td></tr>
+          <tr><td>2</td><td>5</td><td>-3</td><td>9</td></tr>
+          <tr><td>7</td><td>5</td><td>2</td><td>4</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th colspan="3">Sum of squares</th><th>26</th></tr>
+        </tfoot>
+      </table>
+      <p><b>Sample variance</b> = 26 ÷ (5 − 1) = <b>6.50</b></p>
+      <p class="note">If treated as a population, variance would be 26 ÷ 5 = <b>5.20</b>.</p>
+    </section>
+
+    <!-- Practice -->
+    <section class="card">
+      <h2>Practice Yourself</h2>
+      <p>Numbers:
+        <span class="pill">4</span><span class="pill">6</span>
+        <span class="pill">9</span><span class="pill">3</span>
+        <span class="pill">8</span>
+      </p>
+
+      <!-- Step 1 -->
+      <p><b>Step 1: Mean</b></p>
+      <div class="mono">
+        mean = (4 + 6 + 9 + 3 + 8) ÷ 5 =
+        <input id="meanInput" type="number" step="0.01" placeholder="your mean">
+        <button class="btn" onclick="checkMean()">Check Mean</button>
+      </div>
+      <div id="meanOut" class="result"></div>
+
+      <!-- Step 2–4 table (now includes mean column) -->
+      <p><b>Step 2–4: Differences, Squares, and Sum</b></p>
+      <table>
+        <thead>
+          <tr>
+            <th>xᵢ</th>
+            <th>mean</th>
+            <th>xᵢ − mean</th>
+            <th>(xᵢ − mean)²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>4</td><td><input id="m1" placeholder="mean"></td><td><input id="d1" placeholder="diff"></td><td><input id="s1" placeholder="square"></td></tr>
+          <tr><td>6</td><td><input id="m2" placeholder="mean"></td><td><input id="d2" placeholder="diff"></td><td><input id="s2" placeholder="square"></td></tr>
+          <tr><td>9</td><td><input id="m3" placeholder="mean"></td><td><input id="d3" placeholder="diff"></td><td><input id="s3" placeholder="square"></td></tr>
+          <tr><td>3</td><td><input id="m4" placeholder="mean"></td><td><input id="d4" placeholder="diff"></td><td><input id="s4" placeholder="square"></td></tr>
+          <tr><td>8</td><td><input id="m5" placeholder="mean"></td><td><input id="d5" placeholder="diff"></td><td><input id="s5" placeholder="square"></td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th colspan="3">Sum of squares</th><th><input id="sumSquares" placeholder="total"></th></tr>
+        </tfoot>
+      </table>
+      <button class="btn" onclick="checkTable()">Check Table</button>
+      <div id="tableOut" class="result"></div>
+
+      <!-- Step 5: Variance -->
+      <p><b>Step 5: Variance</b></p>
+      <div class="row">
+        <label for="varType"><b>Choose type:</b></label>
+        <select id="varType" class="select" onchange="prefillDenominator()">
+          <option value="sample" selected>Sample (divide by n − 1)</option>
+          <option value="population">Population (divide by n)</option>
+        </select>
+      </div>
+      <div class="mono" style="margin-top:6px;">
+        Variance =
+        (<input id="varSS" placeholder="sum of squares"> ÷
+        <input id="varDen" placeholder="denominator">)
+        <button class="btn" onclick="computeVariance()">Compute Variance</button>
+      </div>
+      <div id="varOut" class="result"></div>
+
+      <!-- HINT: hidden by default; shown only when variance is incorrect -->
+      <div id="varHint" class="note" style="margin-top:6px; display:none;">
+        For these numbers: sum of squares is 26. Sample variance should be <b>6.50</b>; population variance should be <b>5.20</b>.
+      </div>
+
+      <div id="congrats" class="success" style="display:none;">
+        🎉 Nice! Your variance looks correct.
+      </div>
+
+      <div style="margin-top:12px;">
+        <button class="btn" onclick="resetPractice()">Reset All Inputs</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // PRACTICE data: 4, 6, 9, 3, 8
+    const correct = {
+      mean: 6.00,
+      diffs: [-2, 0, 3, -3, 2],
+      squares: [4, 0, 9, 9, 4],
+      sumSquares: 26,
+      sampleVar: 26 / (5 - 1),      // 6.50
+      populationVar: 26 / 5         // 5.20
+    };
+
+    const tol = 0.01;
+    const close = (a,b)=>Math.abs(a-b)<=tol;
+
+    function checkMean(){
+      const val = parseFloat(document.getElementById('meanInput').value);
+      const out = document.getElementById('meanOut');
+      if (close(val, correct.mean)) {
+        out.textContent = "✅ Correct! Mean = 6.00";
+      } else {
+        out.textContent = "❌ Try again. Hint: add the 5 numbers and divide by 5.";
+      }
+    }
+
+    function checkTable(){
+      let ok = true;
+
+      // Mean column must match the Step 1 mean and the true mean (6.00)
+      const enteredMean = parseFloat(document.getElementById('meanInput').value);
+      if (!close(enteredMean, correct.mean)) ok = false;
+
+      ['m1','m2','m3','m4','m5'].forEach(id=>{
+        const v = parseFloat(document.getElementById(id).value);
+        if(!close(v, enteredMean)) ok = false;
+      });
+
+      // Differences & squares
+      ['d1','d2','d3','d4','d5'].forEach((id,i)=>{
+        const v = parseFloat(document.getElementById(id).value);
+        if(!close(v, correct.diffs[i])) ok = false;
+      });
+
+      ['s1','s2','s3','s4','s5'].forEach((id,i)=>{
+        const v = parseFloat(document.getElementById(id).value);
+        if(!close(v, correct.squares[i])) ok = false;
+      });
+
+      // Sum of squares
+      const ss = parseFloat(document.getElementById('sumSquares').value);
+      if(!close(ss, correct.sumSquares)) ok = false;
+
+      document.getElementById('tableOut').textContent = ok
+        ? "✅ Table correct!"
+        : "❌ Check the mean column, differences, squares, or the total sum of squares.";
+
+      // If they fixed the table, keep the hint hidden until variance is computed wrong
+      if (ok) document.getElementById('varHint').style.display = "none";
+    }
+
+    function prefillDenominator(){
+      const sel = document.getElementById('varType').value;
+      const denInput = document.getElementById('varDen');
+      // For this practice set, n = 5
+      denInput.value = (sel === 'sample') ? '4' : '5';
+    }
+
+    function computeVariance(){
+      const ss = parseFloat(document.getElementById('varSS').value);
+      const den = parseFloat(document.getElementById('varDen').value);
+      const type = document.getElementById('varType').value;
+      const out = document.getElementById('varOut');
+      const hint = document.getElementById('varHint');
+      const congrats = document.getElementById('congrats');
+
+      if(Number.isNaN(ss) || Number.isNaN(den) || den <= 0){
+        out.textContent = "❌ Please enter both numbers (denominator must be > 0).";
+        congrats.style.display = "none";
+        hint.style.display = "none"; // don't reveal hint for missing inputs
+        return;
+      }
+
+      const v = ss / den;
+      out.textContent = (type === 'sample'
+        ? "Sample variance (s²) = "
+        : "Population variance (σ²) = ") + v.toFixed(2);
+
+      const good = (type === 'sample') ? correct.sampleVar : correct.populationVar;
+      const right = close(v, good);
+
+      congrats.style.display = right ? "block" : "none";
+      hint.style.display = right ? "none" : "block"; // show hint only when wrong
+    }
+
+    function resetPractice(){
+      [
+        'meanInput','m1','m2','m3','m4','m5',
+        'd1','d2','d3','d4','d5','s1','s2','s3','s4','s5',
+        'sumSquares','varSS','varDen'
+      ].forEach(id => { const el = document.getElementById(id); if(el) el.value = ""; });
+
+      ['meanOut','tableOut','varOut'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.textContent = "";
+      });
+
+      document.getElementById('congrats').style.display = "none";
+      document.getElementById('varHint').style.display = "none";
+      document.getElementById('varType').value = 'sample';
+    }
+
+    // Convenience: if the student filled the table correctly, they can copy 26 quickly
+    document.getElementById('sumSquares').addEventListener('change', e=>{
+      const val = parseFloat(e.target.value);
+      if (close(val, correct.sumSquares)) {
+        document.getElementById('varSS').value = val.toFixed(2);
+      }
+    });
+  </script>
+</body>
+</html>
